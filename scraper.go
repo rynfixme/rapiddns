@@ -1,5 +1,5 @@
 package main
 
-type Scraper interface {
-	Scrape() error
+type Scraper[T any] interface {
+	Scrape(word string) []T
 }

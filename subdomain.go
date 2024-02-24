@@ -6,9 +6,9 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type SubdomainScraperProvider struct{}
+type SubdomainScraperProvider[T SubdomainItem] struct{}
 
-func (s *SubdomainScraperProvider) Scrape(subd string) []SubdomainItem {
+func (s *SubdomainScraperProvider[SubdomainItem]) Scrape(subd string) []SubdomainItem {
 	items := []SubdomainItem{}
 	col := colly.NewCollector()
 
@@ -46,7 +46,7 @@ type SubdomainItem struct {
 type SubdomainClient struct {
 	Domain string
 	Result SubdomainResult
-	S      SubdomainScraperProvider
+	S      Scraper[SubdomainItem]
 }
 
 func (sc *SubdomainClient) getSubdomain() error {

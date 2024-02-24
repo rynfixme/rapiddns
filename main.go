@@ -31,7 +31,8 @@ func main() {
 	case search.FullCommand():
 		sw := searchWord
 		word := strings.Clone(*sw)
-		search := SearchClient{word, SearchResult{[]SearchItem{}}, SearchScraperProvider{}}
+		prov := SearchScraperProvider[SearchItem]{}
+		search := SearchClient{word, SearchResult{[]SearchItem{}}, &prov}
 		search.search()
 		bytes, _ := json.Marshal(search.Result)
 		fmt.Println(string(bytes))
@@ -39,7 +40,8 @@ func main() {
 	case sameIP.FullCommand():
 		sa := sameIPAdress
 		address := strings.Clone(*sa)
-		ip := SameIPClient{address, SameIpResult{[]SameIPItem{}}, SameIPScraperProvider{}}
+		prov := SameIPScraperProvider[SameIPItem]{}
+		ip := SameIPClient{address, SameIpResult{[]SameIPItem{}}, &prov}
 		ip.getSameIP()
 		bytes, _ := json.Marshal(ip.Result)
 		fmt.Println(string(bytes))
@@ -47,10 +49,14 @@ func main() {
 	case subdomain.FullCommand():
 		d := subdomainDomain
 		domain := strings.Clone(*d)
-		subdomain := SubdomainClient{domain, SubdomainResult{[]SubdomainItem{}}, SubdomainScraperProvider{}}
+		prov := SubdomainScraperProvider[SubdomainItem]{}
+		subdomain := SubdomainClient{domain, SubdomainResult{[]SubdomainItem{}}, &prov}
 		subdomain.getSubdomain()
 		bytes, _ := json.Marshal(subdomain.Result)
 		fmt.Println(string(bytes))
+
+	default:
+		fmt.Println(app.Help)
 	}
 
 }

@@ -6,9 +6,9 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type SearchScraperProvider struct{}
+type SearchScraperProvider[T SearchItem] struct{}
 
-func (s *SearchScraperProvider) Scrape(word string) []SearchItem {
+func (s *SearchScraperProvider[SearchItem]) Scrape(word string) []SearchItem {
 	items := []SearchItem{}
 	col := colly.NewCollector()
 
@@ -46,7 +46,7 @@ type SearchItem struct {
 type SearchClient struct {
 	Word   string
 	Result SearchResult
-	S      SearchScraperProvider
+	S      Scraper[SearchItem]
 }
 
 func (sc *SearchClient) search() error {

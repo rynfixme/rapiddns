@@ -6,9 +6,9 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type SameIPScraperProvider struct{}
+type SameIPScraperProvider[T SameIPItem] struct{}
 
-func (s *SameIPScraperProvider) Scrape(address string) []SameIPItem {
+func (s *SameIPScraperProvider[SameIPItem]) Scrape(address string) []SameIPItem {
 	items := []SameIPItem{}
 	col := colly.NewCollector()
 
@@ -46,7 +46,7 @@ type SameIPItem struct {
 type SameIPClient struct {
 	Address string
 	Result  SameIpResult
-	S       SameIPScraperProvider
+	S       Scraper[SameIPItem]
 }
 
 func (sc *SameIPClient) getSameIP() error {
