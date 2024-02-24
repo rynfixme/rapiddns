@@ -49,7 +49,7 @@ type SameIPClient struct {
 	S       Scraper[SameIPItem]
 }
 
-func (sc *SameIPClient) getSameIP() error {
+func (sc *SameIPClient) GetSameIP() error {
 	domains := sc.S.Scrape(sc.Address)
 	sc.Result.Items = domains
 	return nil

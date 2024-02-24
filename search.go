@@ -49,7 +49,7 @@ type SearchClient struct {
 	S      Scraper[SearchItem]
 }
 
-func (sc *SearchClient) search() error {
+func (sc *SearchClient) Search() error {
 	domains := sc.S.Scrape(sc.Word)
 	sc.Result.Items = domains
 	return nil

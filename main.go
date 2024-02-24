@@ -33,7 +33,7 @@ func main() {
 		word := strings.Clone(*sw)
 		prov := SearchScraperProvider[SearchItem]{}
 		search := SearchClient{word, SearchResult{[]SearchItem{}}, &prov}
-		search.search()
+		search.Search()
 		bytes, _ := json.Marshal(search.Result)
 		fmt.Println(string(bytes))
 
@@ -42,7 +42,7 @@ func main() {
 		address := strings.Clone(*sa)
 		prov := SameIPScraperProvider[SameIPItem]{}
 		ip := SameIPClient{address, SameIpResult{[]SameIPItem{}}, &prov}
-		ip.getSameIP()
+		ip.GetSameIP()
 		bytes, _ := json.Marshal(ip.Result)
 		fmt.Println(string(bytes))
 
@@ -51,7 +51,7 @@ func main() {
 		domain := strings.Clone(*d)
 		prov := SubdomainScraperProvider[SubdomainItem]{}
 		subdomain := SubdomainClient{domain, SubdomainResult{[]SubdomainItem{}}, &prov}
-		subdomain.getSubdomain()
+		subdomain.GetSubdomain()
 		bytes, _ := json.Marshal(subdomain.Result)
 		fmt.Println(string(bytes))
 

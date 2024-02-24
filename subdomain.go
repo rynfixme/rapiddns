@@ -49,7 +49,7 @@ type SubdomainClient struct {
 	S      Scraper[SubdomainItem]
 }
 
-func (sc *SubdomainClient) getSubdomain() error {
+func (sc *SubdomainClient) GetSubdomain() error {
 	domains := sc.S.Scrape(sc.Domain)
 	sc.Result.Items = domains
 	return nil
