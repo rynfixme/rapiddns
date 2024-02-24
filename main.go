@@ -34,7 +34,12 @@ func main() {
 		prov := SearchScraperProvider[SearchItem]{}
 		search := SearchClient{word, SearchResult{[]SearchItem{}}, &prov}
 		search.Search()
-		bytes, _ := json.Marshal(search.Result)
+		bytes, err := json.Marshal(search.Result)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		fmt.Println(string(bytes))
 
 	case sameIP.FullCommand():
@@ -43,7 +48,12 @@ func main() {
 		prov := SameIPScraperProvider[SameIPItem]{}
 		ip := SameIPClient{address, SameIpResult{[]SameIPItem{}}, &prov}
 		ip.GetSameIP()
-		bytes, _ := json.Marshal(ip.Result)
+		bytes, err := json.Marshal(ip.Result)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		fmt.Println(string(bytes))
 
 	case subdomain.FullCommand():
@@ -52,7 +62,12 @@ func main() {
 		prov := SubdomainScraperProvider[SubdomainItem]{}
 		subdomain := SubdomainClient{domain, SubdomainResult{[]SubdomainItem{}}, &prov}
 		subdomain.GetSubdomain()
-		bytes, _ := json.Marshal(subdomain.Result)
+		bytes, err := json.Marshal(subdomain.Result)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
 		fmt.Println(string(bytes))
 
 	default:
