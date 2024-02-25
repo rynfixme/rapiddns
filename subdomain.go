@@ -6,9 +6,9 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type SubdomainScraperProvider[T SubdomainItem] struct{}
+type SubdomainScraperProvider[T SubdomainResult] struct{}
 
-func (s *SubdomainScraperProvider[SubdomainItem]) Scrape(subd string) []SubdomainItem {
+func (s *SubdomainScraperProvider[SubdomainResult]) Scrape(subd string) SubdomainResult {
 	items := []SubdomainItem{}
 	col := colly.NewCollector()
 
@@ -29,7 +29,7 @@ func (s *SubdomainScraperProvider[SubdomainItem]) Scrape(subd string) []Subdomai
 		log.Fatalln(err)
 	}
 
-	return items
+	return SubdomainResult{items}
 }
 
 type SubdomainResult struct {
@@ -44,13 +44,15 @@ type SubdomainItem struct {
 }
 
 type SubdomainClient struct {
-	Domain string
-	Result SubdomainResult
-	S      Scraper[SubdomainItem]
+	Domain *string
+	Result *SubdomainResult
+	S      Scraper[SubdomainResult]
 }
 
-func (sc *SubdomainClient) GetSubdomain() error {
-	domains := sc.S.Scrape(sc.Domain)
-	sc.Result.Items = domains
-	return nil
+func (c *SubdomainClient) Search() SubdomainResult {
+	if c.Domain == nil {
+		log.Fatal("subdomain is not specified.")
+	}
+
+	return c.S.Scrape(*c.Domain)
 }

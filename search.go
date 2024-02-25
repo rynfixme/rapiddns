@@ -6,9 +6,9 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type SearchScraperProvider[T SearchItem] struct{}
+type SearchScraperProvider[T SearchResult] struct{}
 
-func (s *SearchScraperProvider[SearchItem]) Scrape(word string) []SearchItem {
+func (s *SearchScraperProvider[SearchResult]) Scrape(word string) SearchResult {
 	items := []SearchItem{}
 	col := colly.NewCollector()
 
@@ -29,7 +29,7 @@ func (s *SearchScraperProvider[SearchItem]) Scrape(word string) []SearchItem {
 		log.Fatalln(err)
 	}
 
-	return items
+	return SearchResult{items}
 }
 
 type SearchResult struct {
@@ -44,13 +44,15 @@ type SearchItem struct {
 }
 
 type SearchClient struct {
-	Word   string
-	Result SearchResult
-	S      Scraper[SearchItem]
+	Word   *string
+	Result *SearchResult
+	S      Scraper[SearchResult]
 }
 
-func (sc *SearchClient) Search() error {
-	domains := sc.S.Scrape(sc.Word)
-	sc.Result.Items = domains
-	return nil
+func (c *SearchClient) Search() SearchResult {
+	if c.Word == nil {
+		log.Fatalln("Search word is not specified.")
+	}
+
+	return c.S.Scrape(*c.Word)
 }

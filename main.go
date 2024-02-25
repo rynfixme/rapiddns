@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/alecthomas/kingpin"
@@ -29,11 +30,15 @@ func main() {
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case search.FullCommand():
 		if searchWord != nil {
-			prov := SearchScraperProvider[SearchItem]{}
-			search := SearchClient{*searchWord, SearchResult{[]SearchItem{}}, &prov}
-			search.Search()
-			bytes, err := json.Marshal(search.Result)
+			prov := SearchScraperProvider[SearchResult]{}
+			c := SearchClient{searchWord, nil, &prov}
 
+			*c.Result = c.Search()
+			if c.Result == nil {
+				log.Fatalln("Search has not completed")
+			}
+
+			bytes, err := json.Marshal(c.Result)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -46,11 +51,15 @@ func main() {
 
 	case sameIP.FullCommand():
 		if sameIPAdress != nil {
-			prov := SameIPScraperProvider[SameIPItem]{}
-			ip := SameIPClient{*sameIPAdress, SameIpResult{[]SameIPItem{}}, &prov}
-			ip.GetSameIP()
-			bytes, err := json.Marshal(ip.Result)
+			prov := SameIPScraperProvider[SameIpResult]{}
+			c := SameIPClient{sameIPAdress, nil, &prov}
 
+			*c.Result = c.Search()
+			if c.Result == nil {
+				log.Fatalln("Search same IP has not completed")
+			}
+
+			bytes, err := json.Marshal(c.Result)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -63,11 +72,15 @@ func main() {
 
 	case subdomain.FullCommand():
 		if subdomainDomain != nil {
-			prov := SubdomainScraperProvider[SubdomainItem]{}
-			subdomain := SubdomainClient{*subdomainDomain, SubdomainResult{[]SubdomainItem{}}, &prov}
-			subdomain.GetSubdomain()
-			bytes, err := json.Marshal(subdomain.Result)
+			prov := SubdomainScraperProvider[SubdomainResult]{}
+			c := SubdomainClient{subdomainDomain, nil, &prov}
 
+			*c.Result = c.Search()
+			if c.Result == nil {
+				log.Fatalln("Search same IP has not completed")
+			}
+
+			bytes, err := json.Marshal(c.Result)
 			if err != nil {
 				fmt.Println(err)
 			}

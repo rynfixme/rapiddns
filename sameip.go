@@ -6,9 +6,9 @@ import (
 	"github.com/gocolly/colly"
 )
 
-type SameIPScraperProvider[T SameIPItem] struct{}
+type SameIPScraperProvider[T SameIpResult] struct{}
 
-func (s *SameIPScraperProvider[SameIPItem]) Scrape(address string) []SameIPItem {
+func (s *SameIPScraperProvider[SameIpResult]) Scrape(address string) SameIpResult {
 	items := []SameIPItem{}
 	col := colly.NewCollector()
 
@@ -29,7 +29,7 @@ func (s *SameIPScraperProvider[SameIPItem]) Scrape(address string) []SameIPItem 
 		log.Fatalln(err)
 	}
 
-	return items
+	return SameIpResult{items}
 }
 
 type SameIpResult struct {
@@ -44,13 +44,14 @@ type SameIPItem struct {
 }
 
 type SameIPClient struct {
-	Address string
-	Result  SameIpResult
-	S       Scraper[SameIPItem]
+	Address *string
+	Result  *SameIpResult
+	S       Scraper[SameIpResult]
 }
 
-func (sc *SameIPClient) GetSameIP() error {
-	domains := sc.S.Scrape(sc.Address)
-	sc.Result.Items = domains
-	return nil
+func (c *SameIPClient) Search() SameIpResult {
+	if c.Address == nil {
+		log.Fatalln("address is not specified.")
+	}
+	return c.S.Scrape(*c.Address)
 }
