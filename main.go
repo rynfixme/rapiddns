@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/alecthomas/kingpin"
 )
@@ -29,46 +28,55 @@ var (
 func main() {
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case search.FullCommand():
-		sw := searchWord
-		word := strings.Clone(*sw)
-		prov := SearchScraperProvider[SearchItem]{}
-		search := SearchClient{word, SearchResult{[]SearchItem{}}, &prov}
-		search.Search()
-		bytes, err := json.Marshal(search.Result)
+		if searchWord != nil {
+			prov := SearchScraperProvider[SearchItem]{}
+			search := SearchClient{*searchWord, SearchResult{[]SearchItem{}}, &prov}
+			search.Search()
+			bytes, err := json.Marshal(search.Result)
 
-		if err != nil {
-			fmt.Println(err)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			fmt.Println(string(bytes))
+			return
 		}
 
-		fmt.Println(string(bytes))
+		fmt.Println(app.Help)
 
 	case sameIP.FullCommand():
-		sa := sameIPAdress
-		address := strings.Clone(*sa)
-		prov := SameIPScraperProvider[SameIPItem]{}
-		ip := SameIPClient{address, SameIpResult{[]SameIPItem{}}, &prov}
-		ip.GetSameIP()
-		bytes, err := json.Marshal(ip.Result)
+		if sameIPAdress != nil {
+			prov := SameIPScraperProvider[SameIPItem]{}
+			ip := SameIPClient{*sameIPAdress, SameIpResult{[]SameIPItem{}}, &prov}
+			ip.GetSameIP()
+			bytes, err := json.Marshal(ip.Result)
 
-		if err != nil {
-			fmt.Println(err)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			fmt.Println(string(bytes))
+			return
 		}
 
-		fmt.Println(string(bytes))
+		fmt.Println(app.Help)
 
 	case subdomain.FullCommand():
-		d := subdomainDomain
-		domain := strings.Clone(*d)
-		prov := SubdomainScraperProvider[SubdomainItem]{}
-		subdomain := SubdomainClient{domain, SubdomainResult{[]SubdomainItem{}}, &prov}
-		subdomain.GetSubdomain()
-		bytes, err := json.Marshal(subdomain.Result)
+		if subdomainDomain != nil {
+			prov := SubdomainScraperProvider[SubdomainItem]{}
+			subdomain := SubdomainClient{*subdomainDomain, SubdomainResult{[]SubdomainItem{}}, &prov}
+			subdomain.GetSubdomain()
+			bytes, err := json.Marshal(subdomain.Result)
 
-		if err != nil {
-			fmt.Println(err)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			fmt.Println(string(bytes))
+			return
 		}
 
-		fmt.Println(string(bytes))
+		fmt.Println(app.Help)
 
 	default:
 		fmt.Println(app.Help)
