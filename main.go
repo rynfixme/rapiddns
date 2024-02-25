@@ -13,13 +13,13 @@ var (
 	app = kingpin.New("rapiddns", "RapidDNS Scraping tool.")
 
 	search     = app.Command("search", "Search by word.")
-	searchWord = search.Arg("word", "Word to find").Required().String()
+	searchWord = search.Flag("word", "Word to find").Required().String()
 
 	sameIP       = app.Command("sameip", "Search by IP address, CIDR.")
-	sameIPAdress = sameIP.Arg("address", "Address or CIDR to find").Required().String()
+	sameIPAdress = sameIP.Flag("address", "Address or CIDR to find").Required().String()
 
 	subdomain       = app.Command("subdomain", "Search by Subdomain.")
-	subdomainDomain = subdomain.Arg("domain", "domain to find").Required().String()
+	subdomainDomain = subdomain.Flag("domain", "domain to find").Required().String()
 )
 
 func main() {
