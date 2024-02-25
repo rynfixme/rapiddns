@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/url"
 
 	"github.com/gocolly/colly"
 )
@@ -22,7 +23,7 @@ func (s *SearchScraperProvider[SearchResult]) Scrape(word string) SearchResult {
 		items = append(items, SearchItem{domain, address, rtype, date})
 	})
 
-	url := "https://rapiddns.io/s/" + word + "?full=1"
+	url := "https://rapiddns.io/s/" + url.QueryEscape(word) + "?full=1"
 	err := col.Visit(url)
 
 	if err != nil {
